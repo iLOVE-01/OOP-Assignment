@@ -148,6 +148,10 @@ label {
 }
 
 .football-pitch {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: stretch;
+    align-items: stretch;
     width: 60vw;
     max-width: 600px;
     height: 82vw;
@@ -181,41 +185,28 @@ label {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    position: absolute;
     width: 100%;
+    position: relative;
 }
 
 .position-gk {
-    bottom: 10px;
-    top: auto;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 88px;
+    flex: 1 1 0;
     justify-content: center;
     z-index: 2;
 }
 
 .position-def {
-    bottom: 100px;
-    top: auto;
-    left: 0;
-    width: 100%;
+    flex: 2 1 0;
     justify-content: space-evenly;
 }
 
 .position-mid {
-    bottom: 210px;
-    top: auto;
-    left: 0;
-    width: 100%;
+    flex: 2 1 0;
     justify-content: space-evenly;
 }
 
 .position-fwd {
-    bottom: 320px;
-    top: auto;
-    left: 0;
-    width: 100%;
+    flex: 1 1 0;
     justify-content: space-evenly;
 }
 
