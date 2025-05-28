@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Lineup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="input-section">
+            <h1 class="fpl-title">Create Football Player</h1>
+            <div class="player-input">
+                <label for="playerName">Player Name:</label>
+                <input type="text" id="playerName" class="fpl-input"><br>
+            </div>
+            <div class="player-input">
+                <label for="playerNumber">Player Number:</label>
+                <input type="number" id="playerNumber" class="fpl-input"><br>
+            </div>
+            <div class="player-input">
+                <label for="playerPosition">Player Position:</label>
+                <select id="playerPosition" class="fpl-input">
+                    <option value="Goalkeeper">Goalkeeper</option>
+                    <option value="Defender">Defender</option>
+                    <option value="Midfielder">Midfielder</option>
+                    <option value="Forward">Forward</option>
+                </select><br>
+            </div>
+
+            <button id="createPlayerBtn" class="fpl-btn">Create Player</button>
+            <button id="clearAllBtn" class="fpl-btn"
+                style="background:linear-gradient(90deg,#c0392b 60%,#e74c3c 100%);margin-top:12px;">Clear All</button>
+            <h2 class="fpl-subtitle">Football Lineup</h2>
+            <div id="lineup-display" class="fpl-lineup">
+            </div>
+        </div>
+        <div class="pitch-section">
+            <div class="football-pitch">
+                <div class="pitch-markings">
+                    <svg viewBox="0 0 360 520" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer boundary -->
+                        <rect x="6" y="6" width="348" height="508" fill="none" stroke="#fff" stroke-width="4" />
+                        <!-- Halfway line -->
+                        <line x1="6" y1="260" x2="354" y2="260" stroke="#fff" stroke-width="3" />
+                        <!-- Center circle -->
+                        <circle cx="180" cy="260" r="45" fill="none" stroke="#fff" stroke-width="3" />
+                        <!-- Center spot -->
+                        <circle cx="180" cy="260" r="4" fill="#fff" />
+                        <!-- Penalty areas -->
+                        <rect x="86" y="6" width="188" height="60" fill="none" stroke="#fff" stroke-width="3" />
+                        <rect x="86" y="454" width="188" height="60" fill="none" stroke="#fff" stroke-width="3" />
+                        <!-- 6-yard boxes -->
+                        <rect x="136" y="6" width="88" height="24" fill="none" stroke="#fff" stroke-width="2" />
+                        <rect x="136" y="490" width="88" height="24" fill="none" stroke="#fff" stroke-width="2" />
+                        <!-- Penalty spots -->
+                        <circle cx="180" cy="44" r="3" fill="#fff" />
+                        <circle cx="180" cy="476" r="3" fill="#fff" />
+                        <!-- Arcs -->
+                        <path d="M140 44 A40 40 0 0 1 220 44" fill="none" stroke="#fff" stroke-width="2" />
+                        <path d="M140 476 A40 40 0 0 0 220 476" fill="none" stroke="#fff" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="position-row position-gk" id="pitch-gk"></div>
+                <div class="position-row position-def" id="pitch-def"></div>
+                <div class="position-row position-mid" id="pitch-mid"></div>
+                <div class="position-row position-fwd" id="pitch-fwd"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
