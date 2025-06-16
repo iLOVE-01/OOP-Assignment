@@ -21,6 +21,8 @@ const pitchDEF = document.getElementById("pitch-def");
 const pitchMID = document.getElementById("pitch-mid");
 const pitchFWD = document.getElementById("pitch-fwd");
 
+const formationSelect = document.getElementById("formationSelect");
+
 const lineup = []; // Array to hold our FootballPlayer objects
 
 // Helper to fetch player image from TheSportsDB API
@@ -74,15 +76,40 @@ const saveLineup = () => {
   localStorage.setItem("fpl_lineup", JSON.stringify(lineup));
 };
 
-// Edit player
+// Edit player (open modal)
 const editPlayer = (index) => {
   const player = lineup[index];
-  playerNameInput.value = player.name;
-  playerNumberInput.value = player.number;
-  playerPositionInput.value = player.position;
-  createPlayerBtn.textContent = "Update Player";
-  createPlayerBtn.dataset.editing = index;
+  // Fill modal fields
+  document.getElementById("editPlayerName").value = player.name;
+  document.getElementById("editPlayerNumber").value = player.number;
+  document.getElementById("editPlayerPosition").value = player.position;
+  document.getElementById("editPlayerIndex").value = index;
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById('editPlayerModal'));
+  modal.show();
 };
+
+// Handle modal save
+const editPlayerForm = document.getElementById("editPlayerForm");
+editPlayerForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const index = parseInt(document.getElementById("editPlayerIndex").value);
+  const name = document.getElementById("editPlayerName").value.trim();
+  const number = parseInt(document.getElementById("editPlayerNumber").value);
+  const position = document.getElementById("editPlayerPosition").value;
+  if (name && !isNaN(number) && position) {
+    lineup[index].name = name;
+    lineup[index].number = number;
+    lineup[index].position = position;
+    lineup[index].imgUrl = await fetchPlayerImage(name);
+    saveLineup();
+    displayLineup();
+    // Hide modal
+    const modalEl = document.getElementById('editPlayerModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    modal.hide();
+  }
+});
 
 // Delete player
 const deletePlayer = (index) => {
@@ -126,30 +153,62 @@ createPlayerBtn.addEventListener("click", async () => {
   }
 });
 
+// Parse formation string (e.g. "4-3-3" or "4-3-2-1") to array of numbers
+function parseFormation(str) {
+  return str.split('-').map(Number);
+}
+
+// Get current formation as array
+function getCurrentFormation() {
+  return parseFormation(formationSelect.value);
+}
+
+// Position mapping for pitch layout
+const positionMap = {
+  GK: { row: 'pitch-gk', slot: 1 },
+  RB: { row: 'pitch-def', slot: 1 },
+  CB: { row: 'pitch-def', slot: 2 },
+  LB: { row: 'pitch-def', slot: 3 },
+  RWB: { row: 'pitch-def', slot: 4 },
+  LWB: { row: 'pitch-def', slot: 5 },
+  DMF: { row: 'pitch-mid', slot: 1 },
+  CMF: { row: 'pitch-mid', slot: 2 },
+  AMF: { row: 'pitch-mid', slot: 3 },
+  LMF: { row: 'pitch-mid', slot: 4 },
+  RMF: { row: 'pitch-mid', slot: 5 },
+  LWF: { row: 'pitch-fwd', slot: 1 },
+  RWF: { row: 'pitch-fwd', slot: 2 },
+  CF: { row: 'pitch-fwd', slot: 3 },
+  SS: { row: 'pitch-fwd', slot: 4 },
+};
+
+// Helper to get all players for a row, sorted by slot
+function getPlayersForRow(rowId) {
+  // Filter players by positionMap row, then sort by slot
+  return lineup
+    .map((p, i) => ({ ...p, _idx: i, ...positionMap[p.position] }))
+    .filter((p) => p.row === rowId)
+    .sort((a, b) => (a.slot || 99) - (b.slot || 99));
+}
+
 const updatePitch = () => {
   pitchGK.innerHTML = "";
   pitchDEF.innerHTML = "";
   pitchMID.innerHTML = "";
   pitchFWD.innerHTML = "";
-  // Group players by position
-  const gks = lineup.filter((p) => p.position === "Goalkeeper");
-  const defs = lineup.filter((p) => p.position === "Defender");
-  const mids = lineup.filter((p) => p.position === "Midfielder");
-  const fwds = lineup.filter((p) => p.position === "Forward");
-  // Evenly space each group using flex and width
-  pitchGK.style.display = "flex";
-  pitchGK.style.justifyContent = "center";
-  gks.forEach((p) => (pitchGK.innerHTML += playerDot(p)));
-  pitchDEF.style.display = "flex";
-  pitchDEF.style.justifyContent = defs.length > 1 ? "space-evenly" : "center";
-  defs.forEach((p) => (pitchDEF.innerHTML += playerDot(p)));
-  pitchMID.style.display = "flex";
-  pitchMID.style.justifyContent = mids.length > 1 ? "space-evenly" : "center";
-  mids.forEach((p) => (pitchMID.innerHTML += playerDot(p)));
-  pitchFWD.style.display = "flex";
-  pitchFWD.style.justifyContent = fwds.length > 1 ? "space-evenly" : "center";
-  fwds.forEach((p) => (pitchFWD.innerHTML += playerDot(p)));
+
+  // GK
+  getPlayersForRow('pitch-gk').forEach((p) => (pitchGK.innerHTML += playerDot(p)));
+  // DEF
+  getPlayersForRow('pitch-def').forEach((p) => (pitchDEF.innerHTML += playerDot(p)));
+  // MID
+  getPlayersForRow('pitch-mid').forEach((p) => (pitchMID.innerHTML += playerDot(p)));
+  // FWD
+  getPlayersForRow('pitch-fwd').forEach((p) => (pitchFWD.innerHTML += playerDot(p)));
 };
+
+// Update pitch when formation changes
+formationSelect.addEventListener("change", updatePitch);
 
 const displayLineup = () => {
   lineupDisplay.innerHTML = "";
@@ -158,7 +217,7 @@ const displayLineup = () => {
             <div class="player-card">
                 <span>Name: ${player.name}, Number: ${player.number}, Position: ${player.position}</span>
                 <span>
-                    <button class="fpl-btn" style="padding:2px 10px;font-size:0.9rem;margin-right:4px;" onclick="editPlayer(${i})">Edit</button>
+                    <button class="fpl-btn" style="padding:2px 10px;font-size:0.9rem;margin-right:4px;" onclick="editPlayer(${i})" data-bs-toggle="modal" data-bs-target="#editPlayerModal">Edit</button>
                     <button class="fpl-btn" style="padding:2px 10px;font-size:0.9rem;background:#c0392b;" onclick="deletePlayer(${i})">Delete</button>
                 </span>
             </div>

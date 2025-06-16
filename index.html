@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Lineup</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -23,11 +25,35 @@
             <div class="player-input">
                 <label for="playerPosition">Player Position:</label>
                 <select id="playerPosition" class="fpl-input">
-                    <option value="Goalkeeper">Goalkeeper</option>
-                    <option value="Defender">Defender</option>
-                    <option value="Midfielder">Midfielder</option>
-                    <option value="Forward">Forward</option>
+                    <option value="GK">Goalkeeper (GK)</option>
+                    <option value="RB">Right Back (RB)</option>
+                    <option value="CB">Center Back (CB)</option>
+                    <option value="LB">Left Back (LB)</option>
+                    <option value="RWB">Right Wing Back (RWB)</option>
+                    <option value="LWB">Left Wing Back (LWB)</option>
+                    <option value="DMF">Defensive Midfielder (DMF)</option>
+                    <option value="CMF">Central Midfielder (CMF)</option>
+                    <option value="AMF">Attacking Midfielder (AMF)</option>
+                    <option value="LMF">Left Midfielder (LMF)</option>
+                    <option value="RMF">Right Midfielder (RMF)</option>
+                    <option value="LWF">Left Wing Forward (LWF)</option>
+                    <option value="RWF">Right Wing Forward (RWF)</option>
+                    <option value="CF">Centre Forward (CF)</option>
+                    <option value="SS">Second Striker (SS)</option>
                 </select><br>
+            </div>
+            <div class="player-input">
+                <label for="formationSelect">Formation:</label>
+                <select id="formationSelect" class="fpl-input">
+                    <option value="4-3-3">4-3-3</option>
+                    <option value="4-4-2">4-4-2</option>
+                    <option value="3-5-2">3-5-2</option>
+                    <option value="3-4-3">3-4-3</option>
+                    <option value="4-3-2-1">4-3-2-1</option>
+                    <option value="5-3-2">5-3-2</option>
+                    <option value="4-2-3-1">4-2-3-1</option>
+                    <option value="4-5-1">4-5-1</option>
+                </select>
             </div>
 
             <button id="createPlayerBtn" class="fpl-btn">Create Player</button>
@@ -70,6 +96,47 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Player Modal -->
+    <div class="modal fade" id="editPlayerModal" tabindex="-1" aria-labelledby="editPlayerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPlayerModalLabel">Edit Player</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPlayerForm">
+                        <div class="mb-3">
+                            <label for="editPlayerName" class="form-label">Player Name</label>
+                            <input type="text" class="form-control" id="editPlayerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPlayerNumber" class="form-label">Player Number</label>
+                            <input type="number" class="form-control" id="editPlayerNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPlayerPosition" class="form-label">Player Position</label>
+                            <select class="form-control" id="editPlayerPosition" required>
+                                <option value="Goalkeeper">Goalkeeper</option>
+                                <option value="Defender">Defender</option>
+                                <option value="Midfielder">Midfielder</option>
+                                <option value="Forward">Forward</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="editPlayerIndex">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="editPlayerForm" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 
